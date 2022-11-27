@@ -10,19 +10,19 @@ for i in input:
     report.append(i.strip("\n"))
 
 
-count_0 = [0,0,0,0,0,0,0,0,0,0,0,0]
-count_1 = [0,0,0,0,0,0,0,0,0,0,0,0]
+count_zeros = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+count_ones = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 for i in report:
     for j in range(0, 12):
         if i[j] == "1":
-            count_1[j] += 1
+            count_ones[j] += 1
         else:
-            count_0[j] += 1
+            count_zeros[j] += 1
 
 bits = ""
 inverted_bits = ""
 for i in range(0, 12):
-    if count_1[i] >= count_0[i]:
+    if count_ones[i] >= count_zeros[i]:
         bits += "1"
         inverted_bits += "0"
     else:
@@ -33,36 +33,48 @@ epsilon_rate = int(inverted_bits, 2)
 print("First Puzzle:", gamma_rate * epsilon_rate)
 
 
-list_for_oxygen_generator = report.copy()
-list_for_CO2_scrubber = report.copy()
+list_for_oxygen = report.copy()
 for i in range(0, 12):
-    if count_1[i] >= count_0[i]:
-        if len(list_for_oxygen_generator) > 1:
-            temp_list = list_for_oxygen_generator.copy()
-            for item in temp_list:
-                if len(list_for_oxygen_generator) > 1:
-                    if item[i] == "0":
-                        list_for_oxygen_generator.remove(item)
-        if len(list_for_CO2_scrubber) > 1:
-            temp_list = list_for_CO2_scrubber.copy()
-            for item in temp_list:
-                if len(list_for_CO2_scrubber) > 1:
-                    if item[i] == "1":
-                        list_for_CO2_scrubber.remove(item)
-    else:
-        if len(list_for_oxygen_generator) > 1:
-            temp_list = list_for_oxygen_generator.copy()
-            for item in temp_list:
-                if len(list_for_oxygen_generator) > 1:
-                    if item[i] == "1":
-                        list_for_oxygen_generator.remove(item)
-        if len(list_for_CO2_scrubber) > 1:
-            temp_list = list_for_CO2_scrubber.copy()
-            for item in temp_list:
-                if len(list_for_CO2_scrubber) > 1:
-                    if item[i] == "0":
-                        list_for_CO2_scrubber.remove(item)
+    if len(list_for_oxygen) > 1:
+        count_ones = 0
+        count_zeros = 0
+        for item in list_for_oxygen:
+            if item[i] == "1":
+                count_ones += 1
+            else:
+                count_zeros += 1
 
-oxygen_generator_rating = int(list_for_oxygen_generator[0], 2)
-CO2_scrubber_rating = int(list_for_CO2_scrubber[0], 2)
+        temp = list_for_oxygen.copy()
+        if count_ones >= count_zeros:
+            for item in temp:
+                if item[i] == "0":
+                    list_for_oxygen.remove(item)
+        else:
+            for item in temp:
+                if item[i] == "1":
+                    list_for_oxygen.remove(item)
+
+list_for_CO2 = report.copy()
+for i in range(0, 12):
+    if len(list_for_CO2) > 1:
+        count_ones = 0
+        count_zeros = 0
+        for item in list_for_CO2:
+            if item[i] == "1":
+                count_ones += 1
+            else:
+                count_zeros += 1
+
+        temp = list_for_CO2.copy()
+        if count_ones >= count_zeros:
+            for item in temp:
+                if item[i] == "1":
+                    list_for_CO2.remove(item)
+        else:
+            for item in temp:
+                if item[i] == "0":
+                    list_for_CO2.remove(item)
+
+oxygen_generator_rating = int(list_for_oxygen[0], 2)
+CO2_scrubber_rating = int(list_for_CO2[0], 2)
 print("Second Puzzle:", oxygen_generator_rating * CO2_scrubber_rating)
