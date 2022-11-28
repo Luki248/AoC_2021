@@ -48,6 +48,7 @@ for i in range(len(boards)):
         list_j.append(list_l)
     boards_marked.append(list_j)
 
+
 def bingo():
     for number in random_pull:
         for i in range(len(boards)):
@@ -65,7 +66,40 @@ for i in range(5):
     for j in range(5):
         if boards_marked[bingo_board][i][j] == "":
             sum += boards[bingo_board][i][j]
-print("First Puzzle:", sum*number)
+print("First Puzzle:", sum * number)
 
 
-print("Second Puzzle:")
+for i in range(len(boards)):
+    for j in range(5):
+        for l in range(5):
+            boards_marked[i][j][l] = ""
+
+boards_to_test = []
+for i in range(len(boards)):
+    boards_to_test.append(i)
+
+
+def bingo2():
+    winning_board = 0
+    winning_number = 0
+    for number in random_pull:
+        for i in range(len(boards)):
+            if boards_to_test.count(i) > 0:
+                for j in range(5):
+                    for l in range(5):
+                        if boards[i][j][l] == number:
+                            boards_marked[i][j][l] = "x"
+                            if check_for_bingo(i, j, l):
+                                winning_board = i
+                                winning_number = number
+                                boards_to_test.remove(i)
+    return winning_board, winning_number
+
+
+winning_board, winning_number = bingo2()
+sum = 0
+for i in range(5):
+    for j in range(5):
+        if boards_marked[winning_board][i][j] == "":
+            sum += boards[winning_board][i][j]
+print("Second Puzzle:", sum * winning_number)
